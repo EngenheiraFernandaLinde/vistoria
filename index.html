@@ -46,7 +46,7 @@ body{font-family:-apple-system,sans-serif;background:#f5f0eb;font-size:15px;colo
 .com-row p{font-size:12px;color:var(--gray)}
 .com-btn{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
 .fi{background:#fff;border:1px solid var(--bd);border-radius:10px;margin-bottom:12px;overflow:hidden}
-.fi img{width:100%;max-height:240px;object-fit:cover;display:block}
+.fi img{width:100%;height:auto;object-fit:contain;display:block;background:#000}
 .fi-body{padding:12px}
 .fi-num{font-size:11px;color:var(--gray);font-weight:600;margin-bottom:6px}
 .fi-text{font-size:14px;line-height:1.5;margin-bottom:4px}
@@ -60,7 +60,7 @@ body{font-family:-apple-system,sans-serif;background:#f5f0eb;font-size:15px;colo
 .empty-ico{font-size:48px;margin-bottom:12px}
 .empty p{font-size:15px;line-height:1.6}
 .sec-title{font-size:13px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--gold-l);padding-bottom:6px;margin-bottom:12px}
-.rep-foto{width:100%;border-radius:8px;margin-bottom:6px;display:block;max-height:260px;object-fit:cover}
+.rep-foto{width:100%;border-radius:8px;margin-bottom:6px;display:block;height:auto;object-fit:contain}
 .rep-caption{font-size:11px;text-align:center;color:var(--gray);font-style:italic;margin-bottom:10px}
 </style>
 </head>
@@ -263,7 +263,7 @@ body{font-family:-apple-system,sans-serif;background:#f5f0eb;font-size:15px;colo
 </div>
 
 <script>
-const COMODOS_P=['Porta de Entrada','Sala de Estar','Cozinha','Lavanderia','Banheiro Social','Suite','Banheiro Suite','Dormitorio 1','Dormitorio 2','Sacada / Varanda','Hall / Corredor','Area de Servico'];
+const COMODOS_P=['Porta de Entrada','Sala de Estar','Cozinha','Lavanderia','Banheiro Social','Suíte','Banheiro Suíte','Dormitório 1','Dormitório 2','Sacada / Varanda','Hall / Corredor','Área de Serviço'];
 let DB=JSON.parse(localStorage.getItem('vdb')||'{"v":[]}');
 let CC=JSON.parse(localStorage.getItem('vcc')||'[]');
 let VID=null,COM=null,EIDX=null,PENDIMG=[];
@@ -334,7 +334,7 @@ function criarVistoria(){
   const cli=document.getElementById('n-cli').value.trim();
   if(!cli){toast('Informe o nome do cliente','err');return}
   const comodos={};[...ccSel].forEach(c=>{comodos[c]=[]});
-  const vv={id:uid(),cli,emp:document.getElementById('n-emp').value.trim(),uni:document.getElementById('n-uni').value.trim(),dat:document.getElementById('n-dat').value,end:document.getElementById('n-end').value.trim(),cr:new Date().toLocaleDateString('pt-BR'),comodos,sis:'Esquadrias (portas e janelas); Revestimentos e pinturas; Pecas ceramicas (pisos e azulejos); Sistema hidrossanitario e eletrico; Loucas e metais; Estrutura (visualmente).',conc:'Apos vistoria tecnica foram identificados pontos de atencao que, caso nao sejam corrigidos, poderao resultar em manifestacoes patologicas futuras, comprometendo o desempenho e a durabilidade dos elementos construtivos.'};
+  const vv={id:uid(),cli,emp:document.getElementById('n-emp').value.trim(),uni:document.getElementById('n-uni').value.trim(),dat:document.getElementById('n-dat').value,end:document.getElementById('n-end').value.trim(),cr:new Date().toLocaleDateString('pt-BR'),comodos,sis:'Esquadrias (portas e janelas); Revestimentos e pinturas; Peças cerâmicas (pisos e azulejos); Sistema hidrossanitário e elétrico; Louças e metais; Estrutura (visualmente).',conc:'Após vistoria técnica foram identificados pontos de atenção que, caso não sejam corrigidos, poderão resultar em manifestações patológicas futuras, comprometendo o desempenho e a durabilidade dos elementos construtivos. Além disso, foram constatadas irregularidades cobertas pelas condições de garantia, conforme previsto nos termos contratuais e nas normas técnicas aplicáveis.'};
   DB.v.push(vv);save();
   ['n-cli','n-emp','n-uni','n-end'].forEach(id=>document.getElementById(id).value='');
   toast('Vistoria criada!');abrirEditor(vv.id);
@@ -352,7 +352,7 @@ function renderEditor(){
   document.getElementById('ed-title').textContent=vv.cli||'Vistoria';
   const comodos=Object.keys(vv.comodos);
   const tot=Object.values(vv.comodos).reduce((a,b)=>a+b.length,0);
-  document.getElementById('ed-content').innerHTML='<div class="card" style="margin-bottom:14px"><p style="font-size:13px;color:var(--gray)">'+(vv.emp||'')+' '+(vv.uni?'- '+vv.uni:'')+'</p><p style="font-size:13px;color:var(--gray)">&#128197; '+(vv.dat||vv.cr)+' &nbsp;-&nbsp; '+comodos.length+' comodos &nbsp;-&nbsp; '+tot+' fotos</p><div class="btn-row" style="margin-top:10px"><button class="btn btn-outline" style="font-size:13px;padding:10px" onclick="abrirEditDados()">&#9998; Dados</button><button class="btn btn-outline" style="font-size:13px;padding:10px" onclick="abrirConclusao()">&#128221; Conclusao</button><button class="btn btn-gold" style="font-size:13px;padding:10px" onclick="abrirRelatorio(VID)">&#128196; PDF</button></div></div><div class="sec-title">Comodos</div>'+comodos.map(c=>{const n=vv.comodos[c].length;return '<div class="com-row"><div><h4>'+c+'</h4><p>'+n+' foto'+(n!==1?'s':'')+'</p></div><button class="com-btn" onclick="abrirComodo(\''+c+'\')">Abrir &#8250;</button></div>';}).join('');
+  document.getElementById('ed-content').innerHTML='<div class="card" style="margin-bottom:14px"><p style="font-size:13px;color:var(--gray)">'+(vv.emp||'')+' '+(vv.uni?'· '+vv.uni:'')+'</p><p style="font-size:13px;color:var(--gray)">📅 '+(vv.dat||vv.cr)+' · '+comodos.length+' cômodos · '+tot+' fotos</p><div class="btn-row" style="margin-top:10px"><button class="btn btn-outline" style="font-size:13px;padding:10px" onclick="abrirEditDados()">✏️ Dados</button><button class="btn btn-outline" style="font-size:13px;padding:10px" onclick="abrirConclusao()">📝 Conclusão</button><button class="btn btn-gold" style="font-size:13px;padding:10px" onclick="abrirRelatorio(VID)">📄 PDF</button></div></div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="sec-title" style="margin:0">Cômodos</div><button onclick="gerenciarComodos()" style="background:var(--gold);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer">+ / - Cômodos</button></div>'+comodos.map(c=>{const n=vv.comodos[c].length;return '<div class="com-row"><div><h4>'+c+'</h4><p>'+n+' foto'+(n!==1?'s':'')+'</p></div><button class="com-btn" onclick="abrirComodo(\''+c+'\')">Abrir ›</button></div>';}).join('');
 }
 
 function abrirEditDados(){
@@ -558,6 +558,52 @@ function _pdf(){
   ftr();
   doc.save('Vistoria_'+(vv.cli||'rel').replace(/\s+/g,'_')+'_'+(vv.dat||new Date().toISOString().slice(0,10))+'.pdf');
   toast('PDF gerado!');
+}
+
+function gerenciarComodos(){
+  const vv=v();
+  const all=[...COMODOS_P,...CC];
+  const ativos=Object.keys(vv.comodos);
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:500;display:flex;align-items:flex-end;justify-content:center';
+  const modal=document.createElement('div');
+  modal.style.cssText='background:#fff;border-radius:20px 20px 0 0;padding:20px 18px 36px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto';
+  modal.innerHTML='<h2 style="font-size:17px;color:var(--or);margin-bottom:16px;border-bottom:2px solid var(--gold-l);padding-bottom:10px;font-weight:700">Gerenciar Cômodos</h2>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px" id="gc-grid">'
+    +all.map(c=>{const on=ativos.includes(c);return '<div class="cc-item '+(on?'on':'')+'" onclick="gcToggle(this,\''+c+'\')"><div class="ck">'+(on?'✓':'')+'</div><span style="font-size:13px">'+c+'</span></div>';}).join('')
+    +'</div>'
+    +'<div style="display:flex;gap:8px;margin-bottom:16px">'
+    +'<input type="text" id="gc-cust" placeholder="Novo cômodo personalizado..." style="flex:1;padding:11px 12px;border:2px solid var(--bd);border-radius:10px;font-size:14px;font-family:-apple-system,sans-serif">'
+    +'<button onclick="gcAddCustom()" style="background:var(--gold);color:#fff;border:none;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;cursor:pointer">+ Add</button>'
+    +'</div>'
+    +'<button onclick="gcSalvar()" style="width:100%;padding:16px;background:var(--gold);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:10px">✓ Salvar</button>'
+    +'<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="width:100%;padding:14px;background:#fff;color:var(--gold-d);border:2px solid var(--gold);border-radius:12px;font-size:16px;font-weight:700;cursor:pointer">Cancelar</button>';
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  window.gcToggle=function(el,c){
+    if(el.classList.contains('on')){el.classList.remove('on');el.querySelector('.ck').textContent=''}
+    else{el.classList.add('on');el.querySelector('.ck').textContent='✓'}
+  };
+  window.gcAddCustom=function(){
+    const inp=document.getElementById('gc-cust');
+    const val=inp.value.trim();if(!val)return;
+    if(!CC.includes(val)){CC.push(val);localStorage.setItem('vcc',JSON.stringify(CC))}
+    const grid=document.getElementById('gc-grid');
+    const div=document.createElement('div');
+    div.className='cc-item on';
+    div.setAttribute('onclick','gcToggle(this,\''+val+'\')');
+    div.innerHTML='<div class="ck">✓</div><span style="font-size:13px">'+val+'</span>';
+    grid.appendChild(div);
+    inp.value='';
+  };
+  window.gcSalvar=function(){
+    const sel=[...document.querySelectorAll('#gc-grid .cc-item.on')].map(el=>el.querySelector('span').textContent.trim());
+    const novo={};
+    sel.forEach(c=>{novo[c]=vv.comodos[c]||[]});
+    vv.comodos=novo;
+    save();overlay.remove();renderEditor();toast('Cômodos atualizados!');
+  };
 }
 
 function exportarBackup(){

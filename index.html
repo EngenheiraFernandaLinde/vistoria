@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vistoria</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/polyfills.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:rgba(201,169,110,0.2)}
 :root{--gold:#C9A96E;--gold-l:#e8d5b0;--gold-d:#9a7a4a;--or:#D47C2A;--gray:#666;--fbg:#d4c5a9;--bd:#ddd;--r:12px}
@@ -495,28 +496,16 @@ function gerarPDF(){
 }
 
 function ac(t){
-  if(!t)return t;
-  return t
-    .replace(/ã/g,'a').replace(/Ã/g,'A')
-    .replace(/â/g,'a').replace(/Â/g,'A')
-    .replace(/á/g,'a').replace(/Á/g,'A')
-    .replace(/à/g,'a').replace(/À/g,'A')
-    .replace(/é/g,'e').replace(/É/g,'E')
-    .replace(/ê/g,'e').replace(/Ê/g,'E')
-    .replace(/è/g,'e').replace(/È/g,'E')
-    .replace(/í/g,'i').replace(/Í/g,'I')
-    .replace(/ì/g,'i').replace(/Ì/g,'I')
-    .replace(/î/g,'i').replace(/Î/g,'I')
-    .replace(/õ/g,'o').replace(/Õ/g,'O')
-    .replace(/ô/g,'o').replace(/Ô/g,'O')
-    .replace(/ó/g,'o').replace(/Ó/g,'O')
-    .replace(/ò/g,'o').replace(/Ò/g,'O')
-    .replace(/ú/g,'u').replace(/Ú/g,'U')
-    .replace(/ù/g,'u').replace(/Ù/g,'U')
-    .replace(/û/g,'u').replace(/Û/g,'U')
-    .replace(/ü/g,'u').replace(/Ü/g,'U')
-    .replace(/ç/g,'c').replace(/Ç/g,'C')
-    .replace(/ñ/g,'n').replace(/Ñ/g,'N');
+  if(!t)return '';
+  // Use font encoding workaround — embed latin1 compatible chars
+  return String(t)
+    .replace(/[àáâãä]/g,'a').replace(/[ÀÁÂÃÄ]/g,'A')
+    .replace(/[èéêë]/g,'e').replace(/[ÈÉÊË]/g,'E')
+    .replace(/[ìíîï]/g,'i').replace(/[ÌÍÎÏ]/g,'I')
+    .replace(/[òóôõö]/g,'o').replace(/[ÒÓÔÕÖ]/g,'O')
+    .replace(/[ùúûü]/g,'u').replace(/[ÙÚÛÜ]/g,'U')
+    .replace(/[ç]/g,'c').replace(/[Ç]/g,'C')
+    .replace(/[ñ]/g,'n').replace(/[Ñ]/g,'N');
 }
 function _pdf(){
   const vv=v();if(!vv)return;
@@ -535,44 +524,44 @@ function _pdf(){
   hdr();ftr();
   doc.setFillColor(248,243,235);doc.rect(ML,y+5,TW,60,'F');
   doc.setFontSize(18);doc.setFont('helvetica','bold');doc.setTextColor(...or);
-  doc.text('Relatorio Tecnico de Vistoria\nde Imovel Novo',W/2,y+30,{align:'center'});
+  doc.text('Relatorio Tecnico de Vistoria de Imovel Novo',W/2,y+30,{align:'center'});
 
-  np();doc.setFontSize(16);doc.setFont('helvetica','bold');doc.setTextColor(...or);doc.text('Sumario',W/2,y,{align:'center'});y+=10;
+  np();doc.setFontSize(16);doc.setFont('helvetica','bold');doc.setTextColor(...or);  doc.text('Sumario',W/2,y,{align:'center'});y+=10;
   doc.setFillColor(...gold);doc.rect(ML,y,TW,0.5,'F');y+=8;
   const comodos=Object.keys(vv.comodos);
-  ['1. Identificacao do solicitante','2. Dados iniciais','3. Sistemas construtivos inspecionados'].concat(comodos.map(function(c,i){return (i+4)+'. '+c})).concat([(comodos.length+4)+'. Conclusao']).forEach(function(item,i){doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(...dark);doc.text(item,ML,y);doc.setTextColor(...gray);doc.text(String(i+1),W-MR,y,{align:'right'});y+=7});
+  ['1. Identificacao do solicitante','2. Dados iniciais','3. Sistemas construtivos inspecionados'].concat(comodos.map(function(c,i){return (i+4)+'. '+c})).concat([(comodos.length+4)+'. Conclusao']).forEach(function(item,i){doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(...dark);doc.text(ac(item),ML,y);doc.setTextColor(...gray);doc.text(String(i+1),W-MR,y,{align:'right'});y+=7});
 
   np();sT('1. Identificacao do Solicitante');
-  bT((vv.cli?'O(A) Sr.(a) '+vv.cli+', proprietario(a) do '+(vv.uni||'imovel')+(vv.emp?' do '+vv.emp:'')+(vv.end?', localizado(a) a '+vv.end:'')+', neste ato, solicitou':'O(A) solicitante solicitou')+' este Relatorio Tecnico de Vistoria de Imovel Novo afim de documentar as possiveis manifestacoes patologicas. Elaborado em conformidade com NBR 16055, NBR 6118, NBR 7200, NBR 9574, NBR 9575, NBR 8160 da ABNT e norma de Inspecao Predial do IBAPE.');
+  bT(ac((vv.cli?'O(A) Sr.(a) '+vv.cli+', proprietario(a) do '+(vv.uni||'imovel')+(vv.emp?' do '+vv.emp:'')+(vv.end?', localizado(a) a '+vv.end:'')+', neste ato, solicitou':'O(A) solicitante solicitou')+' este Relatorio Tecnico de Vistoria de Imovel Novo afim de documentar as possiveis manifestacoes patologicas. Elaborado em conformidade com NBR 16055, NBR 6118, NBR 7200, NBR 9574, NBR 9575, NBR 8160 da ABNT e norma de Inspecao Predial do IBAPE.'));
 
   chk(30);y+=8;sT('2. Dados Iniciais');
   const df=vv.dat?new Date(vv.dat+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):vv.cr||'';
-  if(vv.emp||vv.uni)bT('Edificacao: '+(vv.uni?vv.uni+' - ':'')+( vv.emp||''));
-  if(vv.end)bT('Endereco: '+vv.end);
+  if(vv.emp||vv.uni)bT(ac('Edificacao: '+(vv.uni?vv.uni+' - ':'')+( vv.emp||'')));
+  if(vv.end)bT(ac('Endereco: '+vv.end));
   bT('Responsavel: Eng.a Civil Fernanda Linde\nCREA RS263440');
-  bT('Data da vistoria: '+df);
+  bT(ac('Data da vistoria: '+df));
 
   chk(20);y+=8;sT('3. Sistemas Construtivos Inspecionados');
-  (vv.sis||'').split(';').filter(function(s){return s.trim()}).forEach(function(s){chk(7);doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(...dark);doc.text('-  '+s.trim(),ML+4,y);y+=6});
+  (vv.sis||'').split(';').filter(function(s){return s.trim()}).forEach(function(s){chk(7);doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(...dark);doc.text(ac('-  '+s.trim()),ML+4,y);y+=6});
 
   var fn=1;
   for(var ci=0;ci<comodos.length;ci++){
     var c=comodos[ci];var fotos=vv.comodos[c]||[];
-    np();sT((ci+4)+'. '+c.toUpperCase());
-    if(!fotos.length){bT('Nenhuma anotacao.',{cl:gray,st:'italic'});continue}
+    np();sT(ac((ci+4)+'. '+c.toUpperCase()));
+    if(!fotos.length){bT(ac('Nenhuma anotacao.'),{cl:gray,st:'italic'});continue}
     for(var fi=0;fi<fotos.length;fi++){
       var f=fotos[fi];
       if(f.src&&f.src.startsWith('data:')){
         chk(65);
-        try{var iw=Math.min(TW,110),ih=80;doc.addImage(f.src,'JPEG',(W-iw)/2,y,iw,ih);y+=ih+3;doc.setFontSize(8);doc.setFont('helvetica','italic');doc.setTextColor(...gray);doc.text('Foto '+fn+' - '+(f.leg||'Imagem').substring(0,55),W/2,y,{align:'center'});y+=6}catch(e){}
+        try{var iw=Math.min(TW,110),ih=80;doc.addImage(f.src,'JPEG',(W-iw)/2,y,iw,ih);y+=ih+3;doc.setFontSize(8);doc.setFont('helvetica','italic');doc.setTextColor(...gray);doc.text(ac('Foto '+fn+' - '+(f.leg||'Imagem').substring(0,55)),W/2,y,{align:'center'});y+=6}catch(e){}
       }
       fn++;
-      if(f.leg){chk(10);doc.setFontSize(9.5);doc.setFont('helvetica','bold');doc.setTextColor(...or);var lb='Descricao: ';doc.text(lb,ML,y);var lw=doc.getTextWidth(lb);doc.setFont('helvetica','normal');doc.setTextColor(...dark);var dl=doc.splitTextToSize(f.leg,TW-lw);doc.text(dl[0],ML+lw,y);if(dl.length>1){y+=5;doc.text(doc.splitTextToSize(dl.slice(1).join(' '),TW),ML,y);y+=dl.length*4}y+=6}
-      if(f.prog){chk(10);doc.setFontSize(9.5);doc.setFont('helvetica','bold');doc.setTextColor(...or);var lbp='Prognostico: ';doc.text(lbp,ML,y);var pw=doc.getTextWidth(lbp);doc.setFont('helvetica','normal');doc.setTextColor(...dark);var pl=doc.splitTextToSize(f.prog,TW-pw);doc.text(pl[0],ML+pw,y);if(pl.length>1){y+=5;doc.text(doc.splitTextToSize(pl.slice(1).join(' '),TW),ML,y);y+=pl.length*4}y+=8}
+      if(f.leg){chk(10);doc.setFontSize(9.5);doc.setFont('helvetica','bold');doc.setTextColor(...or);var lb='Descricao: ';doc.text(lb,ML,y);var lw=doc.getTextWidth(lb);doc.setFont('helvetica','normal');doc.setTextColor(...dark);var dl=doc.splitTextToSize(ac(f.leg),TW-lw);doc.text(dl[0],ML+lw,y);if(dl.length>1){y+=5;doc.text(doc.splitTextToSize(ac(dl.slice(1).join(' ')),TW),ML,y);y+=dl.length*4}y+=6}
+      if(f.prog){chk(10);doc.setFontSize(9.5);doc.setFont('helvetica','bold');doc.setTextColor(...or);var lbp='Prognostico: ';doc.text(lbp,ML,y);var pw=doc.getTextWidth(lbp);doc.setFont('helvetica','normal');doc.setTextColor(...dark);var pl=doc.splitTextToSize(ac(f.prog),TW-pw);doc.text(pl[0],ML+pw,y);if(pl.length>1){y+=5;doc.text(doc.splitTextToSize(ac(pl.slice(1).join(' ')),TW),ML,y);y+=pl.length*4}y+=8}
     }
   }
 
-  chk(30);y+=8;sT((comodos.length+4)+'. Conclusao');bT(vv.conc||'');
+  chk(30);y+=8;sT(ac((comodos.length+4)+'. Conclusao'));bT(ac(vv.conc||''));
   chk(60);y+=20;bT('Atenciosamente,');y+=26;
   doc.setFillColor(...dark);doc.rect(W-MR-60,y,60,0.5,'F');y+=4;
   doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(...or);  doc.text('Eng.a Civil Fernanda Linde',W-MR,y,{align:'right'});y+=5;

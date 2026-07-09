@@ -549,7 +549,7 @@ function _pdf(){
   const df=vv.dat?new Date(vv.dat+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):vv.cr||'';
   if(vv.emp||vv.uni)bT('Edificacao: '+(vv.uni?vv.uni+' - ':'')+( vv.emp||''));
   if(vv.end)bT('Endereco: '+vv.end);
-  bT('Responsavel: Enga Civil Fernanda Linde\nCREA RS263440');
+  bT('Responsavel: Eng.a Civil Fernanda Linde\nCREA RS263440');
   bT('Data da vistoria: '+df);
 
   chk(20);y+=8;sT('3. Sistemas Construtivos Inspecionados');
@@ -575,7 +575,7 @@ function _pdf(){
   chk(30);y+=8;sT((comodos.length+4)+'. Conclusao');bT(vv.conc||'');
   chk(60);y+=20;bT('Atenciosamente,');y+=26;
   doc.setFillColor(...dark);doc.rect(W-MR-60,y,60,0.5,'F');y+=4;
-  doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(...or);doc.text('Enga Civil Fernanda Linde',W-MR,y,{align:'right'});y+=5;
+  doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(...or);  doc.text('Eng.a Civil Fernanda Linde',W-MR,y,{align:'right'});y+=5;
   doc.setFont('helvetica','normal');doc.setTextColor(...dark);doc.setFontSize(9);
   doc.text('CREA RS263440',W-MR,y,{align:'right'});y+=5;
   doc.text(new Date().toLocaleDateString('pt-BR'),W-MR,y,{align:'right'});
